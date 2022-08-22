@@ -1,6 +1,7 @@
 #abs()
 #어떤 숫자를 입력받았을때, 그 숫자의 절대값을 반환
 from cgitb import reset
+import pstats
 
 
 print(abs(3));
@@ -70,3 +71,59 @@ print(hex(123123))
 
 a= 3;
 print(id(a))
+
+#isinstance(object, class) 첫번째 인수로 인스턴스, 두 번째 인수로 클래스이름을 받는다. 입력으로 받은 인스턴스가 그 클래스의 인스턴스인지를 판단하여 참이면 True, 거짓이면 False를 돌려준다.
+
+class Person: pass
+
+a= Person();
+print(isinstance(a, Person))
+
+b =3
+print(isinstance(b, Person))
+
+#list(s)는 반복 가능한 자료형 s를 받아서 리스트로 만들어 돌려주는 함수
+
+test = list("python")
+print(test)
+
+#map(f, iterable)은 함수와 반복가능한 자료형을 입력받는다. map은 입력받은 자료형의 각 요소를 함수 f가 수행한 결과를 묶어서 돌려주는 함수이다.
+
+# def two_times(numberlist):
+#     result = []
+#     for number in numberlist:
+#         result.append(number*2);
+#     return result
+
+# result = two_times([1,23,4]);
+# print(result)
+
+# 아래와 같이 변경
+def two_times(x):
+    return x*2
+
+print(list(map(two_times, [1,2,3,4])))
+
+print(list(map(lambda x: x*2, [1,2,3,4])))
+
+#max()/min() -> int뿐만 아니라 String의 최대값 최소값도 반환해준다.
+
+# oct는 정수 형태의 숫자를 8진수 문자열로 반환
+
+print(oct(34))
+
+#ord(c): 문자의 유니코드 값을 돌려준다.
+
+#pow(x,y): x의 y제곲값을 반환
+
+#range(x,y,z) x값 이상 y값 미만 z값의 차이만큼.
+
+#sorted 함수는 입력값을 정렬한 후 그 결과를 리스트로 돌려주는 함수이다.
+
+print(sorted([3,8,5,1,2]))
+
+#type은 입력값이 어떤 자료형인지 알려줌.
+
+#zip는 동일한 개 수로 이루어진 자료형을 묶어 주는 역할을 하는 함수이다.
+
+print(list(zip([1,2,3],[4,5,6],[7,8,9])))
