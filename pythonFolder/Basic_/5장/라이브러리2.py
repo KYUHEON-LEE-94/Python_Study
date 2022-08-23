@@ -41,6 +41,10 @@ if __name__ == "__main__":
     random.shuffle(data);
     print(data);
 
+#자신의 시스템에서 사용하는 기본 웹 브라우저를 자동으로 실행하는 모듈이다. 
+import webbrowser
+
+webbrowser.open_new("http://google.com")
 
 
 
