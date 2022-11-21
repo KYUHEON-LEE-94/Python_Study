@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /
+Allow : /$ 
+
+첫페이지만 접근허용, 나머지는 접근차단

@@ -1,0 +1,224 @@
+day04
+과제풀이 -> 복습 -> 크롤링
+
+4일차 수업예제 링크
+https://colab.research.google.com/drive/1iQ5uoWg9JzdFgxgt-Og8DUOIxu4gjis0?usp=sharing
+
+0. 복습
+1) 웹 크롤링
+	=> 완성된 웹 페이지에서 필요한 정보를 수집하여 추출하는 과정
+	
+2) 웹서버와 웹 클라이언트 동작방법
+	사용자는 브라우저로 접속하는 싶은 주소 입력
+	브라우저가 해당 주소의 서버에게 정보를 달라고 요청(request)
+	웹 서버는 구성에 필요한정보를 HTML코드형태로 전달(response)
+	브라우저는 전달받은 코드를 해석해서 사용자 화면에 예쁘게 보여줌
+
+3) HTML
+	=> 웹페이지를 구성하는 언어
+	<></> : 태그
+	div태그		     내용	
+	<div class = "root"> HTML </div>
+	시작태그  속성이름 속성값	  종료태그
+
+	태그의 구조
+	<부모 시작태그>
+		<자식 시작태그> </자식 종료태그>
+		<자식 시작태그> </자식 종료태그>		
+	</부모 종료태그>
+
+	태그의 속성
+		class : 태그들을 그룹화하는 공통적인 속성
+		id : 중복되지 않는 태그의 특정적인 속성
+
+4) 모듈, 패키지, 라이브러리
+ 모듈
+	-구성단위
+	-전역변수 및 함수 등을 모아둔 파일
+
+ 패키지
+	-특정기능과 관련된 여러가지 모듈들의 집합(폴더)
+
+ 라이브러리
+	- 모듈과 패키지가 합쳐진것을 의미함
+	- 기본 라이브러리와 외부라이브러리(pypi)
+	https://pypi.org/
+
+5) requests 라이브러리
+	http 라이브러리
+
+   BeautifulSoup4
+	구문을 분석해서 필요한 내용만 추출하는 패키지
+	https://www.crummy.com/software/BeautifulSoup/bs4/doc/
+
+6) HTTP 응답코드
+	1XX : 진행중
+	2XX : 요청 성공
+	3XX : 요청완료, 다른페이지 이동
+	4XX : 사용자의 요청이 잘못됨
+	5XX : 서버 오류
+
+1. 웹 크롤링 패키지
+1) requests : 파이썬에서 동작하는 작고 빠른 브라우저
+	- HTML 문서를 가져올 때 사용하는 패키지
+
+	- 사용방법
+	  colab 맨 윗줄에 import requests
+
+	- 네이버 웹페이지 가져오기(requests)
+	  import requests
+	  url = 'https://www.naver.com'
+	  response = requests.get(url)
+
+	- 파라미터(인자값)가 있을 때
+ 	  url = 'https://search.naver.com/search.naver'
+	  param = {'query':'movie'}
+	  response = requests.get(url, params = param)
+
+	- 메소드(4가지)
+	  response.status_code : 상태코드
+	  response.encoding : 언어설정(한글이 깨지면 None 으로 설정)
+	  response.text : 웹페이지 소스(우리 눈에 보기 쉬운 형태)
+	  response.content : 웹페이지 소스(모든 문자 그대로)
+
+2) BeeautifulSoup4 : HTML pASRSER
+	- 구문을 해석해서 필요한 내용만 추출하는 패키지
+	- 웹 사이트의 HTML이나 CSS 같은 정보를 모두 끌어 모아주는 역할
+	- CSS Selector 문법을 준수
+	
+	- 기본 사용법
+	  import requests
+	  from bs4 import BeautifulSoup as bs
+	  url = 'url 주소'
+	  response = requests.get(url)
+	  html = response.text
+ 	  soup = bs(html, 'html.parser')
+
+	- 메소드(5가지)
+	  find('tagname') : 태그중에서 태그명이 'tagname'인 첫번째 것
+	  find('tagname').text : 위의 묶음 중 내용만
+  	  find('tagname').get('property') : 태그의 속성 중 속성명이 property인 것
+	  find_all('tagname') : 태그 중에서 태그명이 'tagname'인 것들의 리스트
+	  find_all('tagname') : 태그 명 중에서 두번째 선택하려면 인덱스를 활용
+	  find_all('tagname')[1].text
+
+
+2. BeautifulSoup4 메서드
+	- find() : 지정된 태그들 중에서 가장 첫번째 태그만 가져오기
+		태그 : soup.find('a')
+		태그내용 : soup.find('a').text
+		속성값 : soup.find('a').get('href')
+
+	- find_all() : 지정한 태그들을 모두 가져와서 리스트에 보관
+		태그 : soup.find_all('a')
+		태그내용 : soup.find_all('a')[0].text
+		속성값 : soup.find_all('a')[0].get('id')
+		
+	- class 활용
+		태그 : soup.find_all('div', class_='box')
+		태그내용 : soup.find_all('div', class_='box')[0].text
+ 
+	- id 활용
+		id는 특정값이므로 find_all 사용 x, find로만 사용한다
+		태그 : soup.find('div', id='box')
+		태그내용 : soup.find('div', id='box').text
+			<div id ='box>파이썬</div>
+
+	CSS 선택자(selector) 활용
+
+	태그명#아이디명 id
+	태그명.클래스명 class
+	태그명[속성명] 해당 속성을 가진 태그 찾기
+	태그명[속성명="속성값"] 해당 속성값을 가진 태그 찾기
+
+	select()
+		지정한 태그들을 모두 가져와서 리스트에 보관
+		태그: soup.select('태그명')
+		태그내용: soup.select('태그명')[0].get_text()
+		속성값: soup.select('태그명.클래스명')
+
+	select_one()
+		지정된 태그들 중에서 가장 첫번째 태그만 가져오기
+		태그: soup.select_one('태그명')
+		태그내용: soup.select_one('태그명').get_text()
+		속성값: soup.select_one('태그명.클래스명')
+		       soup.select_one('태그명#아이디명')
+
+select(), select_one()	설명
+태그이름	태그이름으로 찾음
+.클래스이름'	클래스이름으로 찾음
+#아이디이름'	아이디이름으로 찾음 (아이디는 연속X)
+상위태그이름>자식태그>자식태그'	부모 자식간의 태그 조회' >' 로 구분
+상위태그이름 자손태그'	부모 자손간의 태그 조회 #띄어쓰기(공백) 로 구분 #자식을 건너 띈다.
+[속성]'	태그 안의 속성을 찾음
+태그이름.클래스이름'	해당태그의 클래스이름을 찾음
+#아이디이름 > 태그이름.클래스이름
+	text.strip()
+
+param = {'key1': 'value1', 'key2':'value2', 'key3':'vaule3'}
+response = requests.get(url, params=param)
+
+3. 헤더
+1) User-Agent : 나에 대한 정보
+	내가 직접 접속한 것과 requests를 통해서 접속하는 User-Agent가 다르기 때문에 크롤링이 안될 수 있음
+
+2) 필요성
+	무분별한 크롤링과 서버 과부하를 막기 위해 프로그램을 통하여 접속하는 것을 차단하는 사이트들이 있음
+	내가 원하는 정보를 긁어오지 못하는 경우가 발생할 때 사용
+
+3) 내 User-Agent를 확인하는 사이트
+	https://www.whatismybrowser.com/detect/what-is-my-user-agent
+	현재 내 User-Agent : PC가 변경될때나 IP가 변경될 때 계속 확인해서 넣어줘야함
+	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36
+
+4) 사용방법
+	hearder = {"User-Agent":"나의 User-Agent"}
+	response = requests.get(url, headers = header)
+
+
+4. 정적 웹 크롤링(requests / beautifulsoup) vs 동적 웹 크롤링(selenium)
+	- 정적 웹 크롤링은 원하는 웹페이지의 html문서를 바로 긁어올 수 있음
+	- 동적 웹 크롤링은 특정 버튼을 눌러야하는 상황이 발생하기때문에 바로 html 문서를 긁어올 수 없음
+	
+1) 셀레니움
+	 웹 애플리케이션 자동화 및 테스트를 위한 프레임워크
+		=> 사람 대신 컴퓨터가 특정 버튼을 누르도록 해주는 패키지
+
+2) 설치방법
+vs code : 터미널 창에서 pip install selenium
+
+import 시킬 때
+	from selenum import webdriver	#셀레니움의 webdriver를 사용하기 위한 import
+	from webdriver_manager.chrome import ChromeDriverManager
+	from welenium.sebdriver.common.keys import Keys
+	#셀레니움으로 키를 조작하기 위한 import
+
+colab : 
+
+!pip install Selenium
+!apt-get update # to update ubuntu to correctly run apt install
+!apt install chromium-chromedriver
+
+# - import 코드
+import requests
+from selenium import webdriver
+from bs4 import BeautifulSoup as bs
+
+chrome_options = webdriver.ChromeOptions()
+chrome_options.add_argument('--headless') #내부 창을 띄울 수 없으므로 설정
+chrome_options.add_argument('--no-sandbox')
+chrome_options.add_argument('--disable-dev-shm-usage')
+wd = webdriver.Chrome('chromedriver',chrome_options=chrome_options)
+
+
+
+
+
+
+
+
+
+
+
+
+
